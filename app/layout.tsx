@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { Sidebar } from "@/components/sidebar/Sidebar";
+import { LayoutWrapper } from "@/components/LayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap', 
 });
 
 const geistMono = Geist_Mono({
@@ -23,12 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+   <html lang="en" className={inter.className}>
+      <body className="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
+
   );
 }
