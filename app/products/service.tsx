@@ -1,26 +1,31 @@
-import { apiFetch } from "@/lib/api/baseApi";
-import { ProductsResponse, Product } from "./model";
+'use client';
 
-export async function getProducts(): Promise<Product[]> {
-  try {
-    const response = await apiFetch<ProductsResponse>({
-      endpoint: "https://dummyjson.com/products",
-    });
-    return response.products;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
+import { productService, Product, CreateProductDto } from '@/services/productService';
+
+// Re-export types
+export type { Product, CreateProductDto };
+
+// Custom hooks for products
+export function useProducts() {
+  return productService.useGetAll<Product>();
 }
 
-export async function getProductById(id: number): Promise<Product> {
-  try {
-    const product = await apiFetch<Product>({
-      endpoint: `https://dummyjson.com/products/${id}`,
-    });
-    return product;
-  } catch (error) {
-    console.error(`Error fetching product ${id}:`, error);
-    throw error;
-  }
+export function useProductById(id: number) {
+  return productService.useGetById<Product>(id);
+}
+
+export function useCreateProduct() {
+  return productService.useCreate<CreateProductDto, Product>();
+}
+
+export function useUpdateProduct(id: number) {
+  return productService.useUpdate<Partial<CreateProductDto>, Product>(id);
+}
+
+export function useDeleteProduct(id: number) {
+  return productService.useDelete<Product>(id);
+}
+
+export function useProductsByCategory(category: string) {
+  return productService.useProductsByCategory(category);
 }

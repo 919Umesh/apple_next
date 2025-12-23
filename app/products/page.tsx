@@ -1,58 +1,106 @@
-import { getProducts } from "./service";
-import ProductCard from "./components/ProductCard";
+'use client';
 
-export default async function ProductsPage() {
-  const products = await getProducts();
+import { useProducts, useCreateProduct } from './service';
+import ProductCard from './components/ProductCard';
+import { useState } from 'react';
+
+export default function ProductsPage() {
+  const { data: products, loading, error, refetch } = useProducts();
+  const { mutate: createProduct, loading: creating } = useCreateProduct();
+  
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    description: '',
+    price: '',
+    category: '',
+    stock: '',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createProduct({
+        name: newProduct.name,
+        description: newProduct.description,
+        price: parseFloat(newProduct.price),
+        category: newProduct.category,
+        stock: parseInt(newProduct.stock),
+      });
+      setNewProduct({ name: '', description: '', price: '', category: '', stock: '' });
+      refetch();
+    } catch (err) {
+      console.error('Failed to create product:', err);
+    }
+  };
+
+  if (loading) return <div className="p-8 text-center">Loading products...</div>;
+  if (error) return <div className="p-8 text-red-500">Error: {error.message}</div>;
 
   return (
-    <main className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">
-          Product Management
-        </h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
-          Manage your products, inventory, and pricing
-        </p>
-      </div>
-
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-semibold mb-2">All Products ({products.length})</h2>
-          <p className="text-sm text-zinc-500">Showing all available products</p>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6">Products</h1>
+      
+      {/* Create Product Form */}
+      <form onSubmit={handleSubmit} className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={newProduct.name}
+            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+            className="p-2 border rounded"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Category"
+            value={newProduct.category}
+            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+            className="p-2 border rounded"
+            required
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            value={newProduct.price}
+            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+            className="p-2 border rounded"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            placeholder="Stock"
+            value={newProduct.stock}
+            onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
+            className="p-2 border rounded"
+            required
+          />
+          <textarea
+            placeholder="Description"
+            value={newProduct.description}
+            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+            className="p-2 border rounded md:col-span-2"
+            rows={2}
+            required
+          />
         </div>
-        <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
-          Add New Product
+        <button
+          type="submit"
+          disabled={creating}
+          className="mt-4 px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300"
+        >
+          {creating ? 'Adding...' : 'Add Product'}
         </button>
-      </div>
+      </form>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products?.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-
-      {/* Product Statistics */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
-          <h3 className="font-semibold text-lg mb-2">Total Products</h3>
-          <p className="text-3xl font-bold">{products.length}</p>
-        </div>
-        
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
-          <h3 className="font-semibold text-lg mb-2">Average Rating</h3>
-          <p className="text-3xl font-bold">
-            {(products.reduce((acc, product) => acc + product.rating, 0) / products.length).toFixed(1)}
-          </p>
-        </div>
-        
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
-          <h3 className="font-semibold text-lg mb-2">Total Categories</h3>
-          <p className="text-3xl font-bold">
-            {new Set(products.map(p => p.category)).size}
-          </p>
-        </div>
-      </div>
-    </main>
+    </div>
   );
 }
