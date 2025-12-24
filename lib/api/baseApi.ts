@@ -11,7 +11,7 @@ export async function apiFetch<T>({
   endpoint,
   method = "GET",
   body,
-  cache = "no-store", // SSR by default
+  cache = "no-store",
 }: ApiRequest<T>): Promise<T> {
   const res = await fetch(endpoint, {
     method,
@@ -23,8 +23,9 @@ export async function apiFetch<T>({
   });
 
   if (!res.ok) {
-    throw new Error(`API Error: ${res.status}`);
+    const errorText = await res.text();
+    throw new Error(errorText || `API Error: ${res.status}`);
   }
 
-  return res.json();
+  return res.json() as Promise<T>;
 }
