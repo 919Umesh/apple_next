@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { usePosts } from '../hooks/useCreatePost';
+import { usePosts } from '../hooks/useProducts';
 
 export default function AddPostForm() {
   const [title, setTitle] = useState('');
@@ -30,7 +30,7 @@ export default function AddPostForm() {
       setLocalSuccess(true);
       setTimeout(() => setLocalSuccess(false), 3000);
     } catch {
-      // Error is handled in the hook
+
     }
   };
 

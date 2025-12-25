@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createProduct } from '../actions';
+import { createProduct } from '../actions/productActions';
 
 export default function AddProductForm() {
   const [isLoading, setIsLoading] = useState(false);

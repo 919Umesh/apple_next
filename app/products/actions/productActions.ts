@@ -1,6 +1,7 @@
 'use server';
 
 import { apiFetch } from '@/lib/api/baseApi';
+import { API_ENDPOINTS } from '@/lib/api/endpoints';
 import { revalidatePath } from 'next/cache';
 
 export async function createProduct(formData: FormData) {
@@ -12,7 +13,7 @@ export async function createProduct(formData: FormData) {
 
   try {
     await apiFetch({
-      endpoint: 'https://dummyjson.com/products/add',
+      endpoint: API_ENDPOINTS.products.create,
       method: 'POST',
       body: { title },
     });

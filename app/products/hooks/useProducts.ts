@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { apiFetch } from '@/lib/api/baseApi';
-import { Product, ProductsResponse } from '../model';
+import { Product, ProductsResponse } from '../model/ProductModel';
+import { API_ENDPOINTS } from '@/lib/api/endpoints';
 
 interface CreatePostData {
   title: string;
@@ -22,7 +23,7 @@ export function usePosts() {
     
     try {
       const response = await apiFetch<ProductsResponse>({
-        endpoint: 'https://dummyjson.com/products',
+        endpoint: API_ENDPOINTS.products.getAll,
       });
       setIsSuccess(true);
       return response.products;
@@ -42,7 +43,7 @@ export function usePosts() {
     
     try {
       const result = await apiFetch<Product>({
-        endpoint: `https://dummyjson.com/products/${id}`,
+        endpoint: API_ENDPOINTS.products.getById(id),
       });
       setIsSuccess(true);
       return result;
@@ -62,7 +63,7 @@ export function usePosts() {
     
     try {
       const result = await apiFetch({
-        endpoint: 'https://dummyjson.com/posts/add',
+        endpoint:API_ENDPOINTS.posts.create,
         method: 'POST',
         body: data,
       });

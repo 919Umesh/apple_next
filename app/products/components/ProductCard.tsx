@@ -1,4 +1,4 @@
-import { Product } from "../model";
+import { Product } from "../model/ProductModel";
 
 interface ProductCardProps {
   product: Product;

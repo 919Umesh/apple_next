@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import ProductCard from "./components/ProductCard";
 import AddProductForm from "./components/AddProductForm";
 import AddPostForm from "./components/AddPostForm";
-import { usePosts } from './hooks/useCreatePost';
-import { Product } from './model';
+import { usePosts } from './hooks/useProducts';
+import { Product } from './model/ProductModel';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
