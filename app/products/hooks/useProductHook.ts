@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { createProduct } from '../actions/productActions';
 
-export function useProductForm() {
+export function useProductHook() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 

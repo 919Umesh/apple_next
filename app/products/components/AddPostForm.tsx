@@ -1,9 +1,9 @@
 'use client';
 
-import { useProductForm } from '../hooks/useProductHook';
+import { useProductHook } from '../hooks/useProductHook';
 
 export default function AddPostForm() {
-  const { loading, message, submit } = useProductForm();
+  const { loading, message, submit } = useProductHook();
 
   return (
     <form action={submit} className="mb-6 flex gap-3 items-start">
