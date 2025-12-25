@@ -5,8 +5,15 @@ import { useProductHook } from '../hooks/useProductHook';
 export default function AddPostForm() {
   const { loading, message, submit } = useProductHook();
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
+
+    const formData = new FormData(e.currentTarget); 
+    await submit(formData); 
+  };
+
   return (
-    <form action={submit} className="mb-6 flex gap-3 items-start">
+    <form onSubmit={handleSubmit} className="mb-6 flex gap-3 items-start">
       <input
         name="title"
         required
