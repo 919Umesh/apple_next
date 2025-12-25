@@ -1,7 +1,8 @@
-// app/products/hooks/useCreatePost.ts (create this file)
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { apiFetch } from '@/lib/api/baseApi';
+import { Product, ProductsResponse } from '../model';
 
 interface CreatePostData {
   title: string;
@@ -9,60 +10,81 @@ interface CreatePostData {
   body?: string;
 }
 
-interface UseCreatePostReturn {
-  createPost: (data: CreatePostData) => Promise<void>;
-  isLoading: boolean;
-  isError: boolean;
-  error: string | null;
-  isSuccess: boolean;
-}
-
-export function useCreatePost(): UseCreatePostReturn {
+export function usePosts() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const createPost = async (data: CreatePostData) => {
+  const getProducts = useCallback(async (): Promise<Product[]> => {
     setIsLoading(true);
-    setIsError(false);
     setError(null);
     setIsSuccess(false);
-
+    
     try {
-      const response = await fetch('https://dummyjson.com/posts/add', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          // Add your API key if needed: 'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(data),
+      const response = await apiFetch<ProductsResponse>({
+        endpoint: 'https://dummyjson.com/products',
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log('Post created successfully:', result);
       setIsSuccess(true);
-      
-      // You can return the result if needed
-      return result;
+      return response.products;
     } catch (err) {
-      setIsError(true);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
-      console.error('Error creating post:', err);
+      const message = err instanceof Error ? err.message : 'Failed to fetch products';
+      setError(message);
+      throw err;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  const getProductById = useCallback(async (id: number): Promise<Product> => {
+    setIsLoading(true);
+    setError(null);
+    setIsSuccess(false);
+    
+    try {
+      const result = await apiFetch<Product>({
+        endpoint: `https://dummyjson.com/products/${id}`,
+      });
+      setIsSuccess(true);
+      return result;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to fetch product';
+      setError(message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const createPost = useCallback(async (data: CreatePostData): Promise<any> => {
+    setIsLoading(true);
+    setError(null);
+    setIsSuccess(false);
+    
+    try {
+      const result = await apiFetch({
+        endpoint: 'https://dummyjson.com/posts/add',
+        method: 'POST',
+        body: data,
+      });
+      
+      setIsSuccess(true);
+      return result;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to create post';
+      setError(message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return {
-    createPost,
     isLoading,
-    isError,
     error,
+    isError: !!error,
     isSuccess,
+    getProducts,
+    getProductById,
+    createPost,
   };
 }

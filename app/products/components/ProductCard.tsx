@@ -1,4 +1,3 @@
-// app/products/components/ProductCard.tsx
 import { Product } from "../model";
 
 interface ProductCardProps {
@@ -10,7 +9,6 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      {/* Product Image - Using regular img tag */}
       <div className="relative h-48 w-full bg-zinc-100 dark:bg-zinc-900">
         <img
           src={product.thumbnail}
@@ -24,7 +22,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      {/* Rest of your component remains the same */}
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-semibold text-lg line-clamp-1">{product.title}</h3>
