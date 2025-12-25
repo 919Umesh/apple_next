@@ -14,7 +14,7 @@ export default function AddPostForm() {
     const success = await submit(formData);
 
     if (success) {
-      form.reset(); // ✅ clear all input fields
+      form.reset(); 
     }
   };
 
