@@ -6,10 +6,16 @@ export default function AddPostForm() {
   const { loading, message, submit } = useProductHook();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    const formData = new FormData(e.currentTarget); 
-    await submit(formData); 
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const success = await submit(formData);
+
+    if (success) {
+      form.reset(); // ✅ clear all input fields
+    }
   };
 
   return (

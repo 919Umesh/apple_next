@@ -7,7 +7,7 @@ export function useProductHook() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  async function submit(formData: FormData) {
+  async function submit(formData: FormData): Promise<boolean> {
     setLoading(true);
     setMessage(null);
 
@@ -15,11 +15,13 @@ export function useProductHook() {
 
     if (res.success) {
       setMessage('✓ Product created successfully');
+      setLoading(false);
+      return true;
     } else {
       setMessage(res.error ?? 'Failed to create product');
+      setLoading(false);
+      return false;
     }
-
-    setLoading(false);
   }
 
   return {
