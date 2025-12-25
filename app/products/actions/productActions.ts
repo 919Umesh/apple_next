@@ -11,7 +11,6 @@ export async function getProducts(): Promise<Product[]> {
     endpoint: API_ENDPOINTS.products.getAll,
     cache: 'no-store',
   });
-
   return res.products;
 }
 

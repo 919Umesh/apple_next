@@ -19,8 +19,8 @@ export const sidebarItems = [
     icon: LayoutDashboard,
   },
   {
-    label: "Order Management",
-    href: "/orders",
+    label: "Rooms",
+    href: "/rooms",
     icon: ShoppingCart,
   },
   {
