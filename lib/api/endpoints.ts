@@ -14,9 +14,6 @@ export const API_ENDPOINTS = {
     getAll: 'https://dummyjson.com/posts',
     getById: (id: number) => `https://dummyjson.com/posts/${id}`,
     create: 'https://dummyjson.com/posts/add',
-    update: (id: number) => `https://dummyjson.com/posts/${id}`,
-    delete: (id: number) => `https://dummyjson.com/posts/${id}`,
-    search: (query: string) => `https://dummyjson.com/posts/search?q=${query}`,
   },
   
 
