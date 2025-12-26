@@ -29,8 +29,8 @@ export const sidebarItems = [
     icon: Package,
   },
   {
-    label: "Deals & Discounts",
-    href: "/deals",
+    label: "Properties",
+    href: "/properties",
     icon: Tag,
   },
   {
