@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
+//This is commit from new laptop
 type Props = {
   label: string;
   href: string;
